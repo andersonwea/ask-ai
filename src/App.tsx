@@ -1,10 +1,9 @@
-import './App.css'
 import { AiVisualizer } from './components/AiVisualizer'
 
 export function App() {
 
   return (
-    <main>
+    <main className='w-screen h-screen'>
       <AiVisualizer />
     </main>
   )
