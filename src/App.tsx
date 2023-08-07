@@ -1,9 +1,12 @@
 import './App.css'
+import { AiVisualizer } from './components/AiVisualizer'
 
 export function App() {
 
   return (
-    <h1>Hello world</h1>
+    <main>
+      <AiVisualizer />
+    </main>
   )
 }
 
