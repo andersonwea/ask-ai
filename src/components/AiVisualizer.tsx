@@ -17,7 +17,7 @@ export function AiVisualizer({audioFile}: AiVisuzlizerProps) {
   
     song = p.loadSound(audioFile)
 
-    image = p.loadImage('generative_art.jpg')
+    image = p.loadImage('src/assets/generative_art.jpg')
   }
 
   function setup(p: p5types, canvasParentRef: Element) {
