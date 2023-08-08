@@ -2,15 +2,21 @@ import p5types, { SoundFile, FFT, Image } from 'p5'
 import Sketch from 'react-p5';
 import 'p5/lib/addons/p5.sound'
 
-export function AiVisualizer() {
+interface AiVisuzlizerProps {
+  audioFile: File
+}
+
+export function AiVisualizer({audioFile}: AiVisuzlizerProps) {
   let fft: FFT
   let song: SoundFile
   let image: Image
   let amp
-
+ 
   function preload(p: p5types) {
-    p.soundFormats('mp3')
-    song = p.loadSound('everglow.mp3')
+    p.soundFormats('wav')
+  
+    song = p.loadSound(audioFile)
+
     image = p.loadImage('generative_art.jpg')
   }
 
