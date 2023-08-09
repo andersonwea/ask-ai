@@ -3,40 +3,52 @@ import Sketch from 'react-p5';
 import 'p5/lib/addons/p5.sound'
 
 interface AiVisuzlizerProps {
-  audioFile: File
+  audioFile: File | undefined
 }
 
-export function AiVisualizer({audioFile}: AiVisuzlizerProps) {
-  let fft: FFT
-  let song: SoundFile
-  let image: Image
-  let amp
- 
-  function preload(p: p5types) {
-    p.soundFormats('wav')
-  
-    song = p.loadSound(audioFile)
+let fft: FFT
+let song: SoundFile
+let image: Image
+let amp
 
+export function AiVisualizer({audioFile}: AiVisuzlizerProps) {
+  function preload(p: p5types) { 
     image = p.loadImage('src/assets/generative_art.jpg')
   }
 
   function setup(p: p5types, canvasParentRef: Element) {
     const cvn = p.createCanvas(p.windowWidth, p.windowHeight).parent(canvasParentRef)
-    cvn.mousePressed(() => {
-      if (song.isPlaying()) {
-        song.pause()
-        p.noLoop()
-      } else {
-        song.play()
-        p.loop()
-      }
-    })
 
+    cvn.mousePressed(() => {
+      setTimeout(() => {
+
+        if(song.isLoaded()) {
+          if (song.isPlaying()) {
+            song.pause()
+            p.noLoop()
+          } else {
+            song.play()
+            p.loop()
+          }
+        }
+      }, 500)
+    })
+      
     fft = new window.p5.FFT()
     p.angleMode('degrees')
     p.imageMode('center')
     p.rectMode('center')
     image.filter('blur', 12)
+  }
+
+
+  function getSound(p: p5types) {
+    p.soundFormats('wav')
+    song = p.loadSound(audioFile, (sound: any) => sound)
+  }
+
+  function mousePressed(p: p5types) {
+    getSound(p)
   }
 
   function draw(p: p5types) {
@@ -73,8 +85,7 @@ export function AiVisualizer({audioFile}: AiVisuzlizerProps) {
     }
     p.endShape()
     }
-    
   }
 
-  return <Sketch setup={setup} draw={draw} preload={preload}/>
+  return <Sketch setup={setup} draw={draw} preload={preload} mousePressed={mousePressed}/>
 }
