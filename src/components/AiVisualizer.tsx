@@ -4,36 +4,32 @@ import 'p5/lib/addons/p5.sound'
 
 interface AiVisuzlizerProps {
   audioFile: File | undefined
+  onFileChange: (value: File | undefined) => void
 }
 
 let fft: FFT
-let song: SoundFile
+let song: SoundFile | undefined
 let image: Image
 let amp
 
-export function AiVisualizer({ audioFile }: AiVisuzlizerProps) {
+let tryLoadSound: NodeJS.Timer
+
+export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
   function preload(p: p5types) {
-    image = p.loadImage('src/assets/generative_art.jpg')
+    if (!image) {
+      image = p.loadImage('src/assets/generative_art.jpg')
+    }
+
+    console.log('dentro do preload', audioFile)
+    if (audioFile) {
+      song = p.loadSound(audioFile)
+      onFileChange(undefined)
+      clearInterval(tryLoadSound)
+    }
   }
 
   function setup(p: p5types, canvasParentRef: Element) {
-    const cvn = p
-      .createCanvas(p.windowWidth, p.windowHeight)
-      .parent(canvasParentRef)
-
-    cvn.mousePressed(() => {
-      setTimeout(() => {
-        if (song.isLoaded()) {
-          if (song.isPlaying()) {
-            song.pause()
-            p.noLoop()
-          } else {
-            song.play()
-            p.loop()
-          }
-        }
-      }, 500)
-    })
+    p.createCanvas(p.windowWidth, p.windowHeight).parent(canvasParentRef)
 
     fft = new window.p5.FFT()
     p.angleMode('degrees')
@@ -42,13 +38,39 @@ export function AiVisualizer({ audioFile }: AiVisuzlizerProps) {
     image.filter('blur', 12)
   }
 
-  function getSound(p: p5types) {
-    p.soundFormats('wav')
-    song = p.loadSound(audioFile, (sound: any) => sound)
+  function mousePressed(p: p5types) {
+    if (!song) preload(p)
+
+    setTimeout(() => {
+      let pausedIn: number = 0
+      let duration: number
+
+      if (song && song.isLoaded()) {
+        duration = song.duration()
+        if (song.isPlaying()) {
+          pausedIn = song.currentTime()
+          song.pause()
+          p.noLoop()
+        } else {
+          song.jump(pausedIn, duration)
+          song.play()
+          p.loop()
+        }
+      }
+    }, 1000)
   }
 
-  function mousePressed(p: p5types) {
-    getSound(p)
+  function keyPressed(p: p5types) {
+    if (p.keyCode === p.ENTER) {
+      if (song && song?.isLoaded()) {
+        song?.stop()
+        song = undefined
+      }
+
+      tryLoadSound = setInterval(() => {
+        preload(p)
+      }, 1000)
+    }
   }
 
   function draw(p: p5types) {
@@ -93,6 +115,7 @@ export function AiVisualizer({ audioFile }: AiVisuzlizerProps) {
       draw={draw}
       preload={preload}
       mousePressed={mousePressed}
+      keyPressed={keyPressed}
     />
   )
 }
