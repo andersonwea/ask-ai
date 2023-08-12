@@ -1,6 +1,7 @@
 import p5types, { SoundFile, FFT, Image } from 'p5'
 import Sketch from 'react-p5'
 import 'p5/lib/addons/p5.sound'
+import { Particle } from '../utils/create-particles'
 
 interface AiVisuzlizerProps {
   audioFile: File | undefined
@@ -10,7 +11,9 @@ interface AiVisuzlizerProps {
 let fft: FFT
 let song: SoundFile | undefined
 let image: Image
-let amp
+let amp: number
+
+const particles: Particle[] = []
 
 let tryLoadSound: NodeJS.Timer
 
@@ -31,7 +34,7 @@ export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
   function setup(p: p5types, canvasParentRef: Element) {
     p.createCanvas(p.windowWidth, p.windowHeight).parent(canvasParentRef)
 
-    fft = new window.p5.FFT()
+    fft = new window.p5.FFT(0.3)
     p.angleMode('degrees')
     p.imageMode('center')
     p.rectMode('center')
@@ -41,10 +44,10 @@ export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
   function mousePressed(p: p5types) {
     if (!song) preload(p)
 
-    setTimeout(() => {
-      let pausedIn: number = 0
-      let duration: number
+    let pausedIn: number
+    let duration: number
 
+    setTimeout(() => {
       if (song && song.isLoaded()) {
         duration = song.duration()
         if (song.isPlaying()) {
@@ -75,13 +78,17 @@ export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
 
   function draw(p: p5types) {
     p.background(0)
-
     p.translate(p.width / 2, p.height / 3)
-
-    p.image(image, 0, 0, p.width, p.width)
 
     fft.analyze()
     amp = fft.getEnergy(20, 200)
+
+    p.push()
+    if (amp > 230) {
+      p.rotate(p.random(-0.5, 0.5))
+    }
+    p.image(image, 0, 0, p.width + 100, p.height + 500)
+    p.pop()
 
     const alpha = p.map(amp, 0, 255, 180, 150)
     p.fill(0, alpha)
@@ -91,6 +98,9 @@ export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
     p.stroke(255)
     p.strokeWeight(3)
     p.noFill()
+
+    fft.analyze()
+    amp = fft.getEnergy(20, 200)
 
     const wave = fft.waveform()
 
@@ -106,6 +116,18 @@ export function AiVisualizer({ audioFile, onFileChange }: AiVisuzlizerProps) {
         p.vertex(x, y)
       }
       p.endShape()
+    }
+
+    const par = new Particle(p)
+    particles.push(par)
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      if (!particles[i].edges(p)) {
+        particles[i].update(amp > 230)
+        particles[i].show(p)
+      } else {
+        particles.splice(i, 1)
+      }
     }
   }
 
