@@ -7,8 +7,10 @@ export class Particle {
   w: number
   color: number[]
 
-  constructor(p: p5types) {
-    this.pos = window.p5.Vector.random2D().mult(202)
+  constructor(p: p5types, mobile: boolean | undefined) {
+    this.pos = mobile
+      ? window.p5.Vector.random2D().mult(150)
+      : window.p5.Vector.random2D().mult(202)
     this.vel = p.createVector(0, 0)
     this.acc = this.pos.copy().mult(p.random(0.0001, 0.00001))
 
