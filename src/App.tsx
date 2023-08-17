@@ -2,27 +2,23 @@ import { useState } from 'react'
 import { AiVisualizer } from './components/AiVisualizer'
 import { api } from './lib/api'
 import { useForm } from 'react-hook-form'
-import { fecthAudioFromUrl } from './utils/fetch-audio-from-url'
-import { ThreeDots } from 'react-loader-spinner'
-
-type SearchFormData = {
-  search: string
-}
-
-type SearchVideo = {
-  videoUrl: string
-}
-
-type AudioFromVideo = {
-  audioUrl: string
-}
+import { fetchAudioFromUrl } from './utils/fetch-audio-from-url'
+import { AudioFromVideo, SearchFormData, SearchVideo } from './@types/types'
+import { Loading } from './components/Loading'
+import { IsError } from './components/IsError'
 
 export function App() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+  const [isMusicLoaded, setIsMusicLoaded] = useState<boolean>(false)
   const [audioFile, setAudioFile] = useState<File | undefined>()
 
-  const { register, setValue, handleSubmit } = useForm<SearchFormData>()
+  const {
+    register,
+    setValue,
+    formState: { isSubmitting, errors },
+    handleSubmit,
+  } = useForm<SearchFormData>()
 
   async function getAudioFromVideo(videoUrl: string) {
     try {
@@ -42,28 +38,32 @@ export function App() {
     const { search } = data
     setValue('search', '')
     setAudioFile(undefined)
+    setIsMusicLoaded(false)
+    setIsError(false)
 
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       const response = await api.post<SearchVideo>('/search-video', { search })
 
       const { videoUrl } = response.data
 
       const audioUrl = await getAudioFromVideo(videoUrl)
 
-      if (!audioUrl) {
-        return setNotFound(true)
+      const audioFile = await fetchAudioFromUrl(audioUrl)
+      console.log({ audioFile })
+
+      if (!audioFile) {
+        throw new Error()
       }
 
-      const audioFile = await fecthAudioFromUrl(audioUrl)
-
-      return setAudioFile(audioFile)
+      setAudioFile(audioFile)
+      setIsMusicLoaded(true)
     } catch (err) {
       console.error(err)
-    } finally {
-      setIsLoading(false)
+      return setIsError(true)
     }
   }
+  console.log(errors)
 
   function onFileChange(value: File | undefined) {
     setAudioFile(value)
@@ -72,7 +72,6 @@ export function App() {
   function onPlay(value: boolean) {
     setIsPlaying(value)
   }
-  console.log(audioFile, isPlaying)
 
   return (
     <main className="flex flex-col items-center">
@@ -82,23 +81,12 @@ export function App() {
         onPlay={onPlay}
       />
 
-      {isLoading && (
-        <div className="absolute text-zinc-100 bottom-[200px]">
-          <ThreeDots
-            height={80}
-            width={80}
-            radius={9}
-            color="#7112c3"
-            ariaLabel="três pontos carregando"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      )}
+      {isSubmitting && <Loading />}
 
-      {audioFile && !isPlaying && (
-        <p className="absolute bottom-[230px] font-default text-3xl text-transparent bg-gradient-to-r from-blue-500 to-purple-500 font-extrabold bg-clip-text max-sm:text-2xl">
+      {isError && <IsError />}
+
+      {!isPlaying && isMusicLoaded && (
+        <p className="absolute uppercase  bottom-[230px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
           Pressione a tela para tocar...
         </p>
       )}
@@ -106,12 +94,12 @@ export function App() {
         className="absolute bottom-[100px] w-[600px] max-sm:w-[350px]"
         onSubmit={handleSubmit(handleSearchMusic)}
       >
-        <div className="border-zinc-600 z-10 flex w-full  p-4 border-2 focus-within:border-blue-500 rounded-lg">
+        <div className="border-zinc-100/20 z-10 flex w-full  p-4 border-2 focus-within:border-purple-500/30 rounded-lg">
           <input
             {...register('search')}
             required
-            className="border-none bg-transparent flex-auto w-full focus:outline-none text-zinc-100"
-            placeholder="Escreva"
+            className="border-none bg-transparent flex-auto w-full focus:outline-none text-zinc-100 placeholder:text-zinc-100/30 font-default font-normal"
+            placeholder="Escolha uma musica para tocar.."
           />
         </div>
       </form>
