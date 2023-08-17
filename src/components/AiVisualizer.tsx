@@ -30,7 +30,6 @@ export function AiVisualizer({
     if (!image) {
       image = p.loadImage('src/assets/generative_art.jpg')
     }
-
     if (audioFile) {
       song = p.loadSound(audioFile)
       onFileChange(undefined)
@@ -49,21 +48,17 @@ export function AiVisualizer({
   }
 
   function mouseClicked(p: p5types) {
-    if (!song) preload(p)
+    if (!song) return preload(p)
 
-    // setTimeout(() => {
-    if (song && song.isLoaded()) {
-      if (song.isPlaying()) {
-        onPlay(false)
-        song.pause()
-        p.noLoop()
-      } else {
-        onPlay(true)
-        song.play()
-        p.loop()
-      }
+    if (song.isPlaying()) {
+      onPlay(false)
+      song.pause()
+      p.noLoop()
+    } else {
+      onPlay(true)
+      song.play()
+      p.loop()
     }
-    // }, 1000)
   }
 
   function keyPressed(p: p5types) {
@@ -72,10 +67,6 @@ export function AiVisualizer({
         song?.stop()
         song = undefined
       }
-
-      tryLoadSound = setInterval(() => {
-        preload(p)
-      }, 1000)
     }
   }
 
@@ -117,13 +108,13 @@ export function AiVisualizer({
     if (amp > 230) {
       p.rotate(p.random(-0.5, 0.5))
     }
-    p.image(image, 0, 0, p.width + 100, p.height + 300)
+    p.image(image, 0, 0, p.width + 100, p.height + 330)
     p.pop()
 
     const alpha = p.map(amp, 0, 255, 180, 150)
     p.fill(0, alpha)
     p.noStroke()
-    p.rect(0, 0, p.width, p.height + 300)
+    p.rect(0, 0, p.width, p.height + 330)
 
     p.stroke(255)
     p.strokeWeight(3)
