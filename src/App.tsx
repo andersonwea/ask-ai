@@ -6,6 +6,7 @@ import { fetchAudioFromUrl } from './utils/fetch-audio-from-url'
 import { AudioFromVideo, SearchFormData, SearchVideo } from './@types/types'
 import { Loading } from './components/Loading'
 import { IsError } from './components/IsError'
+import { SendHorizontal } from 'lucide-react'
 
 export function App() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
@@ -16,7 +17,7 @@ export function App() {
   const {
     register,
     setValue,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     handleSubmit,
   } = useForm<SearchFormData>()
 
@@ -42,7 +43,6 @@ export function App() {
     setIsError(false)
 
     try {
-      // setIsLoading(true)
       const response = await api.post<SearchVideo>('/search-video', { search })
 
       const { videoUrl } = response.data
@@ -63,7 +63,6 @@ export function App() {
       return setIsError(true)
     }
   }
-  console.log(errors)
 
   function onFileChange(value: File | undefined) {
     setAudioFile(value)
@@ -86,21 +85,28 @@ export function App() {
       {isError && <IsError />}
 
       {!isPlaying && isMusicLoaded && (
-        <p className="absolute uppercase  bottom-[230px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
+        <p className="absolute uppercase  bottom-[150px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
           Pressione a tela para tocar...
         </p>
       )}
       <form
-        className="absolute bottom-[100px] w-[600px] max-sm:w-[350px]"
+        className="absolute bottom-[50px] w-[600px] max-sm:w-[350px]"
         onSubmit={handleSubmit(handleSearchMusic)}
       >
-        <div className="border-zinc-100/20 z-10 flex w-full  p-4 border-2 focus-within:border-purple-500/30 rounded-lg">
+        <div className="ring-1 ring-zinc-100/30 z-10 flex w-full p-4 focus-within:ring-2 focus-within:ring-purple-500 rounded-lg">
           <input
             {...register('search')}
             required
-            className="border-none bg-transparent flex-auto w-full focus:outline-none text-zinc-100 placeholder:text-zinc-100/30 font-default font-normal"
+            className="border-none bg-transparent flex-auto w-full focus:outline-none text-zinc-100 placeholder:text-zinc-100/30 font-default font-normal peer"
             placeholder="Escolha uma musica para tocar.."
           />
+
+          <button
+            className="outline-none focus:ring-2 ring-purple-500 rounded-lg text-zinc-100/20 focus:text-purple-500 peer-focus:text-purple-500"
+            type="submit"
+          >
+            <SendHorizontal size={32} />
+          </button>
         </div>
       </form>
     </main>
