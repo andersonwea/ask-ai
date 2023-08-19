@@ -33,11 +33,10 @@ export function AiVisualizer({
       image = p.loadImage('src/assets/generative_art.jpg')
     }
     if (audioFile) {
-      song = p.loadSound(audioFile, () => {
-        onFileChange(undefined)
-        clearInterval(tryLoadSound)
-        onLoad(true)
-      })
+      song = p.loadSound(audioFile)
+      onFileChange(undefined)
+      clearInterval(tryLoadSound)
+      onLoad(true)
     }
   }
 
@@ -57,11 +56,9 @@ export function AiVisualizer({
     if (song && song.isPlaying()) {
       onPlay(false)
       song.pause()
-      p.noLoop()
     } else {
       onPlay(true)
       song.play()
-      p.loop()
     }
   }
 
@@ -103,7 +100,7 @@ export function AiVisualizer({
 
   function draw(p: p5types) {
     p.background(0)
-    p.translate(p.width / 2, p.height / 3)
+    p.translate(p.width / 2, p.height / 2.5)
 
     fft.analyze()
     amp = fft.getEnergy(20, 200)

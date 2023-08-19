@@ -90,12 +90,12 @@ export function App() {
       {isError && <IsError />}
 
       {!isPlaying && isMusicLoaded && (
-        <p className="absolute uppercase  bottom-[150px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
+        <p className="absolute uppercase  bottom-[130px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
           Pressione a tela para tocar...
         </p>
       )}
       <form
-        className="absolute bottom-[50px] w-[600px] max-sm:w-[350px]"
+        className="absolute bottom-[40px] w-[600px] max-sm:w-[350px]"
         onSubmit={handleSubmit(handleSearchMusic)}
       >
         <div className="ring-1 ring-zinc-100/30 z-10 flex w-full p-4 focus-within:ring-2 focus-within:ring-purple-500 rounded-lg">

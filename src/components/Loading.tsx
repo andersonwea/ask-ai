@@ -2,7 +2,7 @@ import { ThreeDots } from 'react-loader-spinner'
 
 export function Loading() {
   return (
-    <div className="absolute text-zinc-100 bottom-[150px]">
+    <div className="absolute text-zinc-100 bottom-[130px]">
       <ThreeDots
         height={80}
         width={80}
