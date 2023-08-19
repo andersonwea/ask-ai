@@ -72,12 +72,17 @@ export function App() {
     setIsPlaying(value)
   }
 
+  function onLoad(value: boolean) {
+    setIsMusicLoaded(value)
+  }
+
   return (
     <main className="flex flex-col items-center">
       <AiVisualizer
         audioFile={audioFile}
         onFileChange={onFileChange}
         onPlay={onPlay}
+        onLoad={onLoad}
       />
 
       {isSubmitting && <Loading />}

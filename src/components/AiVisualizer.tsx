@@ -4,9 +4,10 @@ import 'p5/lib/addons/p5.sound'
 import { Particle } from '../utils/create-particles'
 import { useEffect, useState } from 'react'
 
-interface AiVisuzlizerProps {
+interface AiVisualizerProps {
   audioFile: File | undefined
   onPlay: (value: boolean) => void
+  onLoad: (value: boolean) => void
   onFileChange: (value: File | undefined) => void
 }
 
@@ -23,7 +24,8 @@ export function AiVisualizer({
   audioFile,
   onFileChange,
   onPlay,
-}: AiVisuzlizerProps) {
+  onLoad,
+}: AiVisualizerProps) {
   const [isMobile, setIsMobile] = useState<boolean>()
 
   function preload(p: p5types) {
@@ -31,9 +33,11 @@ export function AiVisualizer({
       image = p.loadImage('src/assets/generative_art.jpg')
     }
     if (audioFile) {
-      song = p.loadSound(audioFile)
-      onFileChange(undefined)
-      clearInterval(tryLoadSound)
+      song = p.loadSound(audioFile, () => {
+        onFileChange(undefined)
+        clearInterval(tryLoadSound)
+        onLoad(true)
+      })
     }
   }
 
@@ -50,7 +54,7 @@ export function AiVisualizer({
   function mouseClicked(p: p5types) {
     if (!song) return preload(p)
 
-    if (song.isPlaying()) {
+    if (song && song.isPlaying()) {
       onPlay(false)
       song.pause()
       p.noLoop()
