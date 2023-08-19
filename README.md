@@ -1,6 +1,8 @@
 # 🚧 Play ai 🚧
 <img alt="Status Em Desenvolvimento" src="https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-green">
 
+<img alt="prévia do aplicativo" src="https://github.com/andersonwea/play-ai/blob/main/.github/preview.png"/>
+
 ## 💻 Sobre o projeto
 
 O projeto consiste em um player de músicas que reflete de forma visual tudo que está tocando no momento, 
