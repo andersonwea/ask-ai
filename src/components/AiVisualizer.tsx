@@ -3,6 +3,7 @@ import Sketch from 'react-p5'
 import 'p5/lib/addons/p5.sound'
 import { Particle } from '../utils/create-particles'
 import { useEffect, useState } from 'react'
+import { P5 } from '../@types/p5'
 
 interface AiVisualizerProps {
   audioFile: File | undefined
@@ -28,15 +29,12 @@ export function AiVisualizer({
 }: AiVisualizerProps) {
   const [isMobile, setIsMobile] = useState<boolean>()
 
-  function preload(p: p5types) {
+  function preload(p: P5) {
     if (!image) {
       image = p.loadImage('src/assets/generative_art.jpg')
     }
     if (audioFile) {
       song = p.loadSound(audioFile)
-      onFileChange(undefined)
-      clearInterval(tryLoadSound)
-      onLoad(true)
     }
   }
 
@@ -50,8 +48,16 @@ export function AiVisualizer({
     image.filter('blur', 12)
   }
 
-  function mouseClicked(p: p5types) {
+  function mouseClicked(p: P5) {
     if (!song) return preload(p)
+
+    if (!song.isLoaded()) {
+      return null
+    }
+
+    onFileChange(undefined)
+    clearInterval(tryLoadSound)
+    onLoad(true)
 
     if (song && song.isPlaying()) {
       onPlay(false)
