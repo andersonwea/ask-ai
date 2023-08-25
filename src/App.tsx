@@ -50,7 +50,6 @@ export function App() {
       const audioUrl = await getAudioFromVideo(videoUrl)
 
       const audioFile = await fetchAudioFromUrl(audioUrl)
-      console.log({ audioFile })
 
       if (!audioFile) {
         throw new Error()
