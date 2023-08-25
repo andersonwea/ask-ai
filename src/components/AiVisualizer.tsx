@@ -30,7 +30,7 @@ export function AiVisualizer({
 
   function preload(p: p5types) {
     if (!image) {
-      image = p.loadImage('src/assets/generative_art.jpg')
+      image = p.loadImage('assets/generative_art.jpg')
     }
     if (audioFile) {
       song = p.loadSound(audioFile)
