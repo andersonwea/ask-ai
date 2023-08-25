@@ -1,5 +1,8 @@
-import p5Types from 'p5'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'p5/index'
 
-export interface P5 extends p5Types {
-  loadSound: (path: string | File) => p5Types.SoundFile
+declare module 'p5/index' {
+  export interface p5InstanceExtensions {
+    loadSound: (path: any) => SoundFile
+  }
 }
