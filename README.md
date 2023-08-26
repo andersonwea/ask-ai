@@ -1,12 +1,13 @@
 # 🚧 Play ai 🚧
 <img alt="Status Em Desenvolvimento" src="https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-green">
 
-<img alt="prévia do aplicativo" src="https://github.com/andersonwea/play-ai/blob/main/.github/preview.png"/>
+https://github.com/andersonwea/play-ai/assets/116222132/9ce79d9e-56dc-431a-ac59-c50ca2122a7a
 
 ## 💻 Sobre o projeto
 
 O projeto consiste em um player de músicas que reflete de forma visual tudo que está tocando no momento, 
 você pode pesquisar por qualquer música que esteja disponível no youtube.
+Confira o aplicativo [Link](https://play-ai.vercel.app)
 
 --- 
 
