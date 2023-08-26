@@ -89,7 +89,7 @@ export function App() {
       {isError && <IsError />}
 
       {!isPlaying && isMusicLoaded && (
-        <p className="absolute uppercase  bottom-[130px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-2xl">
+        <p className="absolute uppercase  bottom-[130px] font-default text-3xl text-transparent bg-gradient-to-r from-purple-500 to-blue-500 font-extrabold bg-clip-text max-sm:text-xl">
           Pressione a tela para tocar...
         </p>
       )}
