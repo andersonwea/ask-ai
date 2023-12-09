@@ -1,5 +1,5 @@
 # 🚧 Play ai 🚧
-<img alt="Status Em Desenvolvimento" src="https://img.shields.io/badge/CONCLUÍDO-green">
+<img alt="Status Em Desenvolvimento" src="https://img.shields.io/badge/STATUS-CONCLUÍDO-green">
 
 https://github.com/andersonwea/play-ai/assets/116222132/9ce79d9e-56dc-431a-ac59-c50ca2122a7a
 
